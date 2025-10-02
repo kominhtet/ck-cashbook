@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-1">Add Member</h3>
+        <h5 class="text-muted mb-0">{{ current_business.name }}</h5>
+    </div>
+    <div>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Add New Member</h5>
+                <p class="text-muted">Add a new member to your business. The user must already have an account.</p>
+                
+                <div class="alert alert-info">
+                    <h6><i class="bi bi-info-circle me-1"></i>New User Registration</h6>
+                    <p class="mb-2">If the user doesn't have an account yet, they need to register first:</p>
+                    <ol class="mb-0">
+                        <li>Go to the <a href="{% url 'signup' %}" target="_blank">Sign Up page</a></li>
+                        <li>Create their account with email and password</li>
+                        <li>Then you can add them here using their email address</li>
+                    </ol>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {% for error in form.email.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.role.id_for_label }}" class="form-label">{{ form.role.label }}</label>
+                        {{ form.role }}
+                        {% if form.role.errors %}
+                            <div class="text-danger">
+                                {% for error in form.role.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Add Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">Role Permissions</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Admin</h6>
+                        <ul class="list-unstyled small text-muted">
+                            <li>• View all transactions</li>
+                            <li>• Add/edit transactions</li>
+                            <li>• Add staff members</li>
+                            <li>• Export data</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Staff</h6>
+                        <ul class="list-unstyled small text-muted">
+                            <li>• View transactions</li>
+                            <li>• Add/edit transactions</li>
+                            <li>• Basic dashboard access</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

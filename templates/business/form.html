@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Create Business</h3>
+<form method="post" class="card card-body">{% csrf_token %}
+{{ form.as_p }}
+<button class="btn btn-primary">Create</button>
+</form>
+{% endblock %}
+
+
+# =============================
+# templates/fragments/date_filter.html
+# =============================
+<form method="get" class="row g-2 align-items-end">
+<div class="col-md-3">
+<label class="form-label">Period</label>
+{{ form.period }}
+</div>
+<div class="col-md-3">
+<label class="form-label">From</label>
+{{ form.date_from }}
+</div>
+<div class="col-md-3">
+<label class="form-label">To</label>
+{{ form.date_to }}
+</div>
+{% if form.kind %}
+<div class="col-md-2">
+<label class="form-label">Kind</label>
+{{ form.kind }}
+</div>
+{% endif %}
+<div class="col-md-1">
+<button class="btn btn-outline-primary w-100">Go</button>
+</div>
+</form>
