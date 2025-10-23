@@ -1,3 +1,4 @@
+<<<<<<< HEAD:templates/business/list.html
 {% extends 'base.html' %}
 {% block content %}
 <div class="d-flex justify-content-between mb-3">
@@ -333,4 +334,709 @@ document.getElementById('createBusinessModal').addEventListener('show.bs.modal',
     document.getElementById('selected_business_type').value = '';
 });
 </script>
+=======
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* Modern Mobile UI Styles */
+    @media (max-width: 768px) {
+        .card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            min-height: 44px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.8rem;
+            font-weight: 600;
+        }
+        
+        h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .text-muted {
+            font-size: 0.875rem;
+        }
+        
+        .rounded-pill {
+            border-radius: 50px !important;
+        }
+    }
+    
+    /* Desktop Enhancements */
+    @media (min-width: 768px) {
+        .table-hover tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+            transform: translateX(2px);
+            transition: all 0.2s ease;
+        }
+        
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .btn {
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+    }
+    
+    /* iPhone 14 Pro Max specific optimizations */
+    @media only screen 
+        and (device-width: 430px) 
+        and (device-height: 932px) 
+        and (-webkit-device-pixel-ratio: 3) {
+        .card-body {
+            padding: 1.75rem;
+        }
+        
+        .btn {
+            min-height: 48px;
+            font-size: 16px;
+        }
+        
+        h5 {
+            font-size: 1.2rem;
+        }
+    }
+    
+    /* Empty state styling */
+    .empty-state {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 16px;
+    }
+    
+    /* Role badge animations */
+    .badge {
+        animation: fadeInUp 0.3s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+<div class="d-flex justify-content-between mb-3">
+  
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBusinessModal">Add New Business</button>
+</div>
+<!-- Mobile Card View -->
+<div class="d-block d-md-none">
+    {% if memberships %}
+        <div class="row g-3">
+            {% for m in memberships %}
+            <div class="col-12">
+                <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1 text-dark">{{ m.business.name }}</h5>
+                                <div class="d-flex align-items-center">
+                                    {% if m.role == 'OWNER' %}
+                                        <span class="badge bg-warning text-dark me-2">
+                                            <i class="bi bi-crown me-1"></i>Owner
+                                        </span>
+                                    {% elif m.role == 'ADMIN' %}
+                                        <span class="badge bg-primary me-2">
+                                            <i class="bi bi-shield-check me-1"></i>Admin
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success me-2">
+                                            <i class="bi bi-person me-1"></i>Staff
+                                        </span>
+                                    {% endif %}
+                                    <small class="text-muted">{{ m.role|title }}</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'switch_business' m.business.id %}">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>Switch
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-building me-1"></i>Business Account
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>Active
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-building text-muted" style="font-size: 4rem;"></i>
+                </div>
+                <h5 class="text-muted mb-3">No Business Memberships</h5>
+                <p class="text-muted mb-4">You haven't been added to any businesses yet.</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBusinessModal">
+                    <i class="bi bi-plus-circle me-2"></i>Create Your First Business
+                </button>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Desktop Table View -->
+<div class="d-none d-md-block">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-0 py-3 px-4">
+                                <i class="bi bi-building me-2 text-primary"></i>Business Name
+                            </th>
+                            <th class="border-0 py-3 px-4">
+                                <i class="bi bi-person-badge me-2 text-primary"></i>Role
+                            </th>
+                            <th class="border-0 py-3 px-4 text-center">
+                                <i class="bi bi-arrow-right-circle me-2 text-primary"></i>Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in memberships %}
+                        <tr class="border-bottom">
+                            <td class="py-3 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                        <i class="bi bi-building text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-dark">{{ m.business.name }}</h6>
+                                        <small class="text-muted">Business Account</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                {% if m.role == 'OWNER' %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-crown me-1"></i>Owner
+                                    </span>
+                                {% elif m.role == 'ADMIN' %}
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-shield-check me-1"></i>Admin
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-person me-1"></i>Staff
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-4 text-center">
+                                <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'switch_business' m.business.id %}">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>Switch
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5">
+                                <div class="mb-4">
+                                    <i class="bi bi-building text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                                <h5 class="text-muted mb-3">No Business Memberships</h5>
+                                <p class="text-muted mb-4">You haven't been added to any businesses yet.</p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBusinessModal">
+                                    <i class="bi bi-plus-circle me-2"></i>Create Your First Business
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Business Modal -->
+{% if show_modal %}
+<div class="modal-backdrop fade show"></div>
+{% endif %}
+<div class="modal fade {% if show_modal %}show{% endif %}" id="createBusinessModal" tabindex="-1"
+  aria-labelledby="createBusinessModalLabel" aria-hidden="true" {% if show_modal %}style="display: block;" {% endif %}>
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h4 class="modal-title fw-bold" id="createBusinessModalLabel">Add New Business</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="createBusinessForm" method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div class="modal-body px-4">
+          <!-- Business Name Section -->
+          <div class="mb-4">
+            <label for="id_name" class="form-label fw-semibold">Business Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+            <div class="invalid-feedback d-block">{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Business Category Section -->
+          <div class="mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <h5 class="mb-0 fw-semibold">Select Business Category</h5>
+            </div>
+            <p class="text-muted small mb-3">This will help us personalize your business</p>
+
+            <div class="row g-3">
+              {% for category in categories %}
+              <div class="col-6 col-md-3">
+                <div class="category-card text-center p-3 border rounded-3 cursor-pointer"
+                  data-category-id="{{ category.id }}" style="cursor: pointer; transition: all 0.2s;">
+                  <div class="mb-2">
+                    {% if category.photo %}
+                    <img src="{{ category.photo.url }}" alt="{{ category.name }}" class="img-fluid"
+                      style="width: 40px; height: 40px; object-fit: contain;">
+                    {% else %}
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto"
+                      style="width: 40px; height: 40px;">
+                      <i class="fas fa-building text-muted"></i>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="small fw-medium">{{ category.name }}</div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Hidden input for category -->
+            <input type="hidden" name="category" id="selected_category" value="">
+            {% if form.category.errors %}
+            <div class="invalid-feedback d-block">{{ form.category.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Business Type Section -->
+          <div class="mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <h5 class="mb-0 fw-semibold">Select Business Type</h5>
+            </div>
+            <p class="text-muted small mb-3">Choose how you operate your business</p>
+
+            <div class="row g-3">
+              {% for business_type in business_types %}
+              <div class="col-6 col-md-4">
+                <div class="type-card text-center p-3 border rounded-3 cursor-pointer"
+                  data-type-id="{{ business_type.id }}" style="cursor: pointer; transition: all 0.2s;">
+                  <div class="mb-2">
+                    {% if business_type.photo %}
+                    <img src="{{ business_type.photo.url }}" alt="{{ business_type.name }}" class="img-fluid"
+                      style="width: 40px; height: 40px; object-fit: contain;">
+                    {% else %}
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto"
+                      style="width: 40px; height: 40px;">
+                      <i class="fas fa-store text-muted"></i>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="small fw-medium">{{ business_type.name }}</div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Hidden input for business_type -->
+            <input type="hidden" name="business_type" id="selected_business_type" value="">
+            {% if form.business_type.errors %}
+            <div class="invalid-feedback d-block">{{ form.business_type.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0 d-flex flex-column flex-sm-row gap-2">
+          <!-- <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Cancel</button> -->
+          <button type="submit" class="btn btn-primary flex-fill">Create Business</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .category-card,
+  .type-card {
+    border: 2px solid #e9ecef !important;
+    background: #fff;
+    transition: all 0.2s ease;
+    min-height: 100px;
+  }
+
+  .category-card:hover,
+  .type-card:hover {
+    border-color: #0d6efd !important;
+    background-color: #f8f9ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+  }
+
+  .category-card.selected,
+  .type-card.selected {
+    border-color: #0d6efd !important;
+    background-color: #e7f3ff;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+  }
+
+  .category-card.selected::after,
+  .type-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .category-card,
+  .type-card {
+    position: relative;
+  }
+
+  .form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Mobile Responsive Styles */
+  @media (max-width: 768px) {
+    .modal-dialog {
+      margin: 0.5rem;
+      max-width: calc(100% - 1rem);
+    }
+
+    .modal-content {
+      border-radius: 12px;
+      max-height: 90vh;
+    }
+
+    .modal-body {
+      padding: 1rem !important;
+      max-height: calc(90vh - 120px);
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 1rem 1rem 0.5rem 1rem !important;
+    }
+
+    .modal-footer {
+      padding: 0.5rem 1rem 1rem 1rem !important;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+    }
+
+    .category-card,
+    .type-card {
+      padding: 1rem 0.75rem !important;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .category-card img,
+    .type-card img {
+      width: 32px !important;
+      height: 32px !important;
+    }
+
+    .category-card .bg-light,
+    .type-card .bg-light {
+      width: 32px !important;
+      height: 32px !important;
+    }
+
+    .category-card .small,
+    .type-card .small {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .form-control {
+      font-size: 16px; /* Prevents zoom on iOS */
+      padding: 14px 16px;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      font-size: 16px;
+      min-height: 48px; /* Better touch target */
+    }
+
+    .btn-close {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Ensure proper spacing on very small screens */
+    @media (max-width: 480px) {
+      .modal-dialog {
+        margin: 0.25rem;
+        max-width: calc(100% - 0.5rem);
+      }
+
+      .category-card,
+      .type-card {
+        padding: 0.75rem 0.5rem !important;
+        min-height: 80px;
+      }
+
+      .category-card img,
+      .type-card img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .category-card .bg-light,
+      .type-card .bg-light {
+        width: 28px !important;
+        height: 28px !important;
+      }
+    }
+  }
+
+  /* iPhone 14 Pro Max specific optimizations */
+  @media only screen 
+    and (device-width: 430px) 
+    and (device-height: 932px) 
+    and (-webkit-device-pixel-ratio: 3) {
+    .modal-dialog {
+      margin: 1rem;
+      max-width: calc(100% - 2rem);
+    }
+
+    .modal-content {
+      max-height: 85vh;
+    }
+
+    .modal-body {
+      max-height: calc(85vh - 100px);
+    }
+  }
+</style>
+
+<script>
+  // Category selection
+  document.addEventListener('DOMContentLoaded', function () {
+    const categoryCards = document.querySelectorAll('.category-card');
+    const typeCards = document.querySelectorAll('.type-card');
+    const selectedCategoryInput = document.getElementById('selected_category');
+    const selectedTypeInput = document.getElementById('selected_business_type');
+
+    // Handle category selection
+    categoryCards.forEach(card => {
+      card.addEventListener('click', function () {
+        // Remove selected class from all cards
+        categoryCards.forEach(c => c.classList.remove('selected'));
+
+        // Add selected class to clicked card
+        this.classList.add('selected');
+
+        // Set the hidden input value
+        const categoryId = this.getAttribute('data-category-id');
+        selectedCategoryInput.value = categoryId;
+      });
+    });
+
+    // Handle business type selection
+    typeCards.forEach(card => {
+      card.addEventListener('click', function () {
+        // Remove selected class from all cards
+        typeCards.forEach(c => c.classList.remove('selected'));
+
+        // Add selected class to clicked card
+        this.classList.add('selected');
+
+        // Set the hidden input value
+        const typeId = this.getAttribute('data-type-id');
+        selectedTypeInput.value = typeId;
+      });
+    });
+  });
+
+  // Form submission handling
+  document.getElementById('createBusinessForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    const modalBody = this.querySelector('.modal-body');
+
+    // Clear previous error messages
+    const existingErrors = modalBody.querySelectorAll('.alert-danger');
+    existingErrors.forEach(error => error.remove());
+
+    // Show loading state
+    submitBtn.textContent = 'Creating...';
+    submitBtn.disabled = true;
+
+    fetch(this.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          // Show success message
+          const successAlert = document.createElement('div');
+          successAlert.className = 'alert alert-success';
+          successAlert.textContent = data.message;
+          modalBody.insertBefore(successAlert, modalBody.firstChild);
+
+          // Close modal and reload page after a short delay
+          setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createBusinessModal'));
+            modal.hide();
+            window.location.reload();
+          }, 1500);
+        } else {
+          // Show validation errors
+          if (data.errors) {
+            Object.keys(data.errors).forEach(field => {
+              const fieldElement = this.querySelector(`[name="${field}"]`);
+              if (fieldElement) {
+                fieldElement.classList.add('is-invalid');
+                // Remove existing error message
+                const existingError = fieldElement.parentNode.querySelector('.invalid-feedback');
+                if (existingError) {
+                  existingError.remove();
+                }
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback d-block';
+                errorDiv.textContent = data.errors[field][0];
+                fieldElement.parentNode.appendChild(errorDiv);
+              }
+            });
+          }
+        }
+      })
+      .catch(error => {
+        const errorAlert = document.createElement('div');
+        errorAlert.className = 'alert alert-danger';
+        errorAlert.textContent = 'Error creating business. Please try again.';
+        modalBody.insertBefore(errorAlert, modalBody.firstChild);
+      })
+      .finally(() => {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+  });
+
+  // Clear form and errors when modal is shown
+  document.getElementById('createBusinessModal').addEventListener('show.bs.modal', function () {
+    const form = document.getElementById('createBusinessForm');
+    form.reset();
+
+    // Clear validation states
+    const invalidElements = form.querySelectorAll('.is-invalid');
+    invalidElements.forEach(el => el.classList.remove('is-invalid'));
+
+    const errorMessages = form.querySelectorAll('.invalid-feedback');
+    errorMessages.forEach(msg => msg.remove());
+
+    const alerts = form.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
+
+    // Clear selections
+    document.querySelectorAll('.category-card, .type-card').forEach(card => {
+      card.classList.remove('selected');
+    });
+
+    // Reset hidden inputs
+    document.getElementById('selected_category').value = '';
+    document.getElementById('selected_business_type').value = '';
+  });
+</script>
+>>>>>>> bc36083 (update mobile ui):main/templates/business/list.html
 {% endblock %}
