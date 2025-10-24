@@ -1,4 +1,4 @@
-<<<<<<< HEAD:book/views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -447,26 +447,9 @@ def add_member(request):
     return render(request, 'add_member.html', {
         'form': form,
         'current_business': current_business,
-=======
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.http import HttpResponse, HttpResponseForbidden
-from django.db.models import Sum, F
-from io import BytesIO
-import csv
-import pandas as pd
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+    })
 
 
-from .models import Business, Membership, Transaction, TransactionCategory, BusinessCategory, BusinessType
-from .forms import BusinessForm, CashInForm, CashOutForm, DateFilterForm, AddMemberForm, CustomUserCreationForm
-from .permissions import require_membership, require_role
-from .utils import resolve_period
 
 def signup(request):
     """User registration with email field"""
@@ -857,48 +840,3 @@ def export_pdf(request):
     return resp
 
 
-@require_membership
-def add_member(request):
-    """Add a new member to the current business"""
-    biz_id = request.session['biz_id']
-    current_business = Business.objects.get(id=biz_id)
-    
-    # Get current user's membership to check their role
-    current_membership = Membership.objects.get(user=request.user, business_id=biz_id)
-    
-    # Check if user has permission to add members (OWNER or ADMIN only)
-    if current_membership.role not in [Membership.Role.OWNER, Membership.Role.ADMIN]:
-        return HttpResponseForbidden('You do not have permission to add members.')
-    
-    if request.method == 'POST':
-        form = AddMemberForm(current_membership.role, request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            role = form.cleaned_data['role']
-            
-            try:
-                user = User.objects.get(email=email)
-                
-                # Check if user is already a member of this business
-                if Membership.objects.filter(user=user, business_id=biz_id).exists():
-                    messages.error(request, 'This user is already a member of this business.')
-                else:
-                    # Create new membership
-                    Membership.objects.create(
-                        user=user,
-                        business=current_business,
-                        role=role
-                    )
-                    messages.success(request, f'Successfully added {user.get_full_name() or user.username} as {role}.')
-                    return redirect('dashboard')
-                    
-            except User.DoesNotExist:
-                messages.error(request, 'User with this email does not exist.')
-    else:
-        form = AddMemberForm(current_membership.role)
-    
-    return render(request, 'add_member.html', {
-        'form': form,
-        'current_business': current_business,
->>>>>>> bc36083 (update mobile ui):main/book/views.py
-    })

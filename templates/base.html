@@ -1,133 +1,109 @@
-<<<<<<< HEAD:templates/base.html
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SimpleCash Multi</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-<div class="container">
-<a class="navbar-brand" href="{% url 'home' %}">CASHBOOK</a>
-<div class="collapse navbar-collapse">
-<ul class="navbar-nav me-auto">
-{% if current_business %}
-{% if current_membership.role == 'OWNER' or current_membership.role == 'ADMIN' %}
-<li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-{% endif %}
-<li class="nav-item"><a class="nav-link" href="{% url 'transactions_list' %}">Transactions</a></li>
-{% endif %}
-
-</ul>
-<ul class="navbar-nav">
-{% if user.is_authenticated %}
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{% if current_business %}{{ current_business.name }}{% else %}Choose Business{% endif %}</a>
-<ul class="dropdown-menu dropdown-menu-end">
-{% for m in memberships %}
-<li><a class="dropdown-item" href="{% url 'switch_business' m.business.id %}">{{ m.business.name }} ({{ m.role }})</a></li>
-{% empty %}
-<li><span class="dropdown-item-text text-muted">No businesses</span></li>
-{% endfor %}
-</ul>
-</li>
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-<i class="bi bi-person-circle me-1"></i>{{ user.get_full_name|default:user.username }}
-</a>
-<ul class="dropdown-menu dropdown-menu-end">
-<li><span class="dropdown-item-text"><strong>{{ user.get_full_name|default:user.username }}</strong></span></li>
-<li><span class="dropdown-item-text text-muted">{{ user.email }}</span></li>
-<li><hr class="dropdown-divider"></li>
-<li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
-</ul>
-</li>
-{% else %}
-<li class="nav-item"><a class="btn btn-outline-light btn-sm me-2" href="{% url 'login' %}">Login</a></li>
-{% endif %}
-</ul>
-</div>
-</div>
-</nav>
-<main class="container py-4">
-{% for message in messages %}
-<div class="alert alert-{{ message.tags }}">{{ message }}</div>
-{% endfor %}
-{% block content %}{% endblock %}
-</main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-=======
 {% load static %}
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CASHBOOK</title>
-<link rel="icon" href="{% static 'img/cb.png' %}" type="image/ico" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-<div class="container">
-<a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/cb.png' %}" alt="CASHBOOK" width="30" height="30"></a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav me-auto">
-{% if current_business %}
-{% if current_membership.role == 'OWNER' or current_membership.role == 'ADMIN' %}
-<li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-{% endif %}
-<li class="nav-item"><a class="nav-link" href="{% url 'transactions_list' %}">Transactions</a></li>
-{% endif %}
 
-</ul>
-<ul class="navbar-nav">
-{% if user.is_authenticated %}
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{% if current_business %}{{ current_business.name }}{% else %}Choose Business{% endif %}</a>
-<ul class="dropdown-menu dropdown-menu-end">
-{% for m in memberships %}
-<li><a class="dropdown-item" href="{% url 'switch_business' m.business.id %}">{{ m.business.name }} ({{ m.role }})</a></li>
-{% empty %}
-<li><span class="dropdown-item-text text-muted">No businesses</span></li>
-{% endfor %}
-</ul>
-</li>
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-<i class="bi bi-person-circle me-1"></i>{{ user.get_full_name|default:user.username }}
-</a>
-<ul class="dropdown-menu dropdown-menu-end">
-<li><span class="dropdown-item-text"><strong>{{ user.get_full_name|default:user.username }}</strong></span></li>
-<li><span class="dropdown-item-text text-muted">{{ user.email }}</span></li>
-<li><hr class="dropdown-divider"></li>
-<li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
-</ul>
-</li>
-{% else %}
-<li class="nav-item"><a class="btn btn-outline-light btn-sm me-2" href="{% url 'login' %}">Login</a></li>
-{% endif %}
-</ul>
-</div>
-</div>
-</nav>
-<main class="container py-4">
-{% for message in messages %}
-<div class="alert alert-{{ message.tags }}">{{ message }}</div>
-{% endfor %}
-{% block content %}{% endblock %}
-</main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CASHBOOK</title>
+
+    {# Favicons: png type, shortcut and apple-touch for broader support. Cache-buster helps during development. #}
+    <link rel="icon" href="{% static 'img/cb.png' %}?v=2" type="image/png">
+    <link rel="shortcut icon" href="{% static 'img/cb.png' %}?v=2" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/cb.png' %}?v=2">
+
+    {# CSS / icons #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    {# Small client-side libs used on many pages (kept in head for early load) #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <div class="d-flex w-100 align-items-center">
+                <div class="me-2">
+                    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/cb.png' %}" alt="CASHBOOK" width="30" height="30"></a>
+                </div>
+
+                {# center area for mobile links: visible on small screens, hidden on lg+ #}
+                <div class="flex-grow-1 text-center d-lg-none">
+                    {% if current_business %}
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            {% if current_membership.role == 'OWNER' or current_membership.role == 'ADMIN' %}
+                                <a class="nav-link text-white px-2 py-1" href="{% url 'dashboard' %}">Dashboard</a>
+                            {% endif %}
+                            <a class="nav-link text-white px-2 py-1" href="{% url 'transactions_list' %}">Transactions</a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# toggler aligned right #}
+                <div class="ms-2">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {# hide primary links inside the collapse on small screens to avoid duplication with mobile-only links above #}
+                <ul class="navbar-nav me-auto d-none d-lg-flex">
+                    {% if current_business %}
+                        {% if current_membership.role == 'OWNER' or current_membership.role == 'ADMIN' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'transactions_list' %}">Transactions</a></li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                                {% if current_business %}
+                                    {{ current_business.name }}
+                                {% else %}
+                                    Choose Business
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                {% for m in memberships %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'switch_business' m.business.id %}">{{ m.business.name }} ({{ m.role }})</a>
+                                    </li>
+                                {% empty %}
+                                    <li><span class="dropdown-item-text text-muted">No businesses</span></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+                                <i class="bi bi-person-circle me-1"></i>{{ user.get_full_name|default:user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><span class="dropdown-item-text"><strong>{{ user.get_full_name|default:user.username }}</strong></span></li>
+                                <li><span class="dropdown-item-text text-muted">{{ user.email }}</span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm me-2" href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
->>>>>>> bc36083 (update mobile ui):main/templates/base.html
+
 </html>
