@@ -1,1 +1,7 @@
 python manage.py runserver --noreload
+git rebase --continue
+
+git add .
+git rebase --continue
+git status
+git push origin main --force
